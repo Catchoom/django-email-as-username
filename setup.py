@@ -10,9 +10,9 @@ version = emailusernames.__version__
 
 if sys.argv[-1] == 'publish':
     os.system("python setup.py sdist upload")
-    print "You probably want to also tag the version now:"
-    print "  git tag -a %s -m 'version %s'" % (version, version)
-    print "  git push --tags"
+    print("You probably want to also tag the version now:")
+    print("  git tag -a %s -m 'version %s'" % (version, version))
+    print("  git push --tags")
     sys.exit()
 
 
@@ -40,11 +40,14 @@ def get_package_data(root):
 
 
 setup(
-    name='django-email-as-username',
+    name='py2-py3-django-email-as-username',
     version=version,
     description='User authentication with email addresses instead of usernames.',
     author='Tom Christie',
-    url='https://github.com/dabapps/django-email-as-username',
+    author_email='',
+    maintainer='Harmo',
+    maintainer_email='dtharmo@gmail.com',
+    url='https://github.com/harmo/django-email-as-username',
     packages=get_packages('emailusernames'),
     package_data=get_package_data('emailusernames'),
     license='BSD',

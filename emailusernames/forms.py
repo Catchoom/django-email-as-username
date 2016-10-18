@@ -1,4 +1,4 @@
-from django import forms
+from django import forms, VERSION
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from django.contrib.admin.forms import AdminAuthenticationForm
@@ -22,8 +22,20 @@ class EmailAuthenticationForm(AuthenticationForm):
 
     def __init__(self, request=None, *args, **kwargs):
         super(EmailAuthenticationForm, self).__init__(request, *args, **kwargs)
-        del self.fields['username']
-        self.fields.keyOrder = ['email', 'password']
+        if self.fields.get('username'):
+            del self.fields['username']
+        if hasattr(self.fields, 'keyOrder'):
+            # Django < 1.6
+            self.fields.keyOrder = ['email', 'password']
+        else:
+            # Django >= 1.6
+            from collections import OrderedDict
+            fields = OrderedDict()
+            for key in ('email', 'password'):
+                fields[key] = self.fields.pop(key)
+            for key, value in self.fields.items():
+                fields[key] = value
+            self.fields = fields
 
     def clean(self):
         email = self.cleaned_data.get('email')
@@ -35,7 +47,9 @@ class EmailAuthenticationForm(AuthenticationForm):
                 raise forms.ValidationError(self.message_incorrect_password)
             if not self.user_cache.is_active:
                 raise forms.ValidationError(self.message_inactive)
-        self.check_for_test_cookie()
+        # check_for_test_cookie was removed in django 1.7
+        if hasattr(self, 'check_for_test_cookie'):
+            self.check_for_test_cookie()
         return self.cleaned_data
 
 
@@ -50,7 +64,8 @@ class EmailAdminAuthenticationForm(AdminAuthenticationForm):
 
     def __init__(self, *args, **kwargs):
         super(EmailAdminAuthenticationForm, self).__init__(*args, **kwargs)
-        del self.fields['username']
+        if self.fields.get('username'):
+            del self.fields['username']
 
     def clean(self):
         email = self.cleaned_data.get('email')
@@ -64,7 +79,9 @@ class EmailAdminAuthenticationForm(AdminAuthenticationForm):
                 raise forms.ValidationError(self.message_inactive)
             if not self.user_cache.is_staff:
                 raise forms.ValidationError(self.message_restricted)
-        self.check_for_test_cookie()
+        # check_for_test_cookie was removed in django 1.7
+        if hasattr(self, 'check_for_test_cookie'):
+            self.check_for_test_cookie()
         return self.cleaned_data
 
 
@@ -80,7 +97,8 @@ class EmailUserCreationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(EmailUserCreationForm, self).__init__(*args, **kwargs)
-        del self.fields['username']
+        if self.fields.get('username'):
+            del self.fields['username']
 
     def clean_email(self):
         email = self.cleaned_data["email"]
@@ -103,7 +121,10 @@ class EmailUserChangeForm(UserChangeForm):
 
     class Meta:
         model = User
+        if VERSION[1] > 7:
+            fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super(EmailUserChangeForm, self).__init__(*args, **kwargs)
-        del self.fields['username']
+        if self.fields.get('username'):
+            del self.fields['username']

@@ -11,7 +11,7 @@ Django Email as Username
 
 ---
 
-**Note**: As of Django 1.5 onwards you should consider using a [custom user model][docs] rather than using the `django-email-as-username` package.  We are no longer accepting pull requests and issues against this package.
+**Note**: As of Django 1.5 onwards you should consider using a [custom user model][docs] rather than using the `django-email-as-username` package.  Original author is no longer accepting pull requests and issues against this package, but this fork is trying to keep it functional for old and new versions of Django.
 
 A [new fork was created][fork] to support Django > 1.5 & Python 3 versions and keep old ones functionnal.
 
@@ -220,6 +220,18 @@ tests you'll need to find a way to explicitly disable them.
 Changelog
 =========
 
+1.7.1
+-----
+* Fix check_for_test_cookie call for django > 1.6
+* Fix field order on EmailAuthenticationForm
+
+
+1.7.0
+-----
+
+* Fix compat with Django 1.7 & 1.8
+* Fix compat with python 3.5
+
 1.6.7
 -----
 
@@ -387,7 +399,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 [django-email-login]: https://bitbucket.org/tino/django-email-login
 [django-email-usernames]: https://bitbucket.org/hakanw/django-email-usernames
 [django-user-accounts]: https://github.com/pinax/django-user-accounts/
-[travis]: http://travis-ci.org/tomchristie/django-email-as-username?branch=master
-[build-status-image]: https://secure.travis-ci.org/dabapps/django-email-as-username.png
+[travis]: http://travis-ci.org/harmo/django-email-as-username?branch=master
+[build-status-image]: https://travis-ci.org/harmo/django-email-as-username.svg
 [docs]: https://docs.djangoproject.com/en/dev/topics/auth/customizing/#auth-custom-user
 [fork]: https://github.com/harmo/django-email-as-username
